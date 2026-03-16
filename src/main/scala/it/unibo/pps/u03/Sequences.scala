@@ -2,6 +2,8 @@ package u03
 
 import u03.Optionals.Optional
 
+import scala.annotation.tailrec
+
 object Sequences: // Essentially, generic linkedlists
   
   enum Sequence[E]:
@@ -32,7 +34,11 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 30], 0 => [10, 20, 30]
      * E.g., [], 2 => []
      */
-    def skip[A](s: Sequence[A])(n: Int): Sequence[A] = ???
+    @tailrec
+    def skip[A](s: Sequence[A])(n: Int): Sequence[A] = (s, n) match
+      case (Nil(),_) => Nil()
+      case (s,0) => s
+      case (Cons(head,tail),_) => skip(tail)(n-1)
 
     /*
      * Zip two sequences
