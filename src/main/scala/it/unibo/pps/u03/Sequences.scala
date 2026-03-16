@@ -46,7 +46,9 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10], [] => []
      * E.g., [], [] => []
      */
-    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = ???
+    def zip[A, B](first: Sequence[A], second: Sequence[B]): Sequence[(A, B)] = (first, second) match
+      case (Cons(head,tail),Cons(head2,tail2)) => Cons((head,head2),zip(tail,tail2))
+      case (_,_) => Nil()
 
     /*
      * Concatenate two sequences
