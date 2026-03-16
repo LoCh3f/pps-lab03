@@ -1,6 +1,9 @@
 package u03
 
+import it.unibo.pps.u02.Values.s
+import u03.OptionalInts.OptionalInt
 import u03.Optionals.Optional
+import u03.Optionals.Optional.{Empty, Just}
 
 import scala.annotation.tailrec
 
@@ -86,7 +89,18 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [30, 20, 10] => 10
      * E.g., [10, 1, 30] => 1
      */
-    def min(s: Sequence[Int]): Optional[Int] = ???
+    def min(s: Sequence[Int]): Optional[Int] =
+      @tailrec
+      def tailMin(s: Sequence[Int], tempMin: Int): Optional[Int] = s match
+        case Nil() => Just(tempMin)
+        case Cons(head, tail) if head < tempMin => tailMin(tail, head)
+        case Cons(head, tail) => tailMin(tail, tempMin)
+        s match
+          case Nil() => Empty()
+          case Cons(head,tail) => tailMin(tail, head)
+
+
+
 
     /*
      * Get the elements at even indices
