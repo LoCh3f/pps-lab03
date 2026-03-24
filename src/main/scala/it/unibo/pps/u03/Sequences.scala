@@ -6,6 +6,7 @@ import u03.Optionals.Optional
 import u03.Optionals.Optional.{Empty, Just}
 
 import scala.annotation.tailrec
+import scala.collection.View.Concat
 
 object Sequences: // Essentially, generic linkedlists
   
@@ -126,7 +127,7 @@ object Sequences: // Essentially, generic linkedlists
     @tailrec
     def contains[A](s: Sequence[A])(elem: A): Boolean = s match
       case Cons(head, tail) if head == elem => true
-      case Cons(_, tail) => contains(s)(elem)
+      case Cons(_, tail) => contains(tail)(elem)
       case Nil() => false
 
     /*
@@ -134,7 +135,17 @@ object Sequences: // Essentially, generic linkedlists
      * E.g., [10, 20, 10, 30] => [10, 20, 30]
      * E.g., [10, 20, 30] => [10, 20, 30]
      */
-    def distinct[A](s: Sequence[A]): Sequence[A] = ???
+    def distinct[A](s: Sequence[A]): Sequence[A] =
+      @tailrec
+      def _distinct(s: Sequence[A])(newSequence: Sequence[A]): Sequence[A] = s match {
+        case Cons(head, tail) if contains(newSequence)(head) =>  _distinct(tail)(newSequence)
+        case Cons(head,tail) => _distinct(tail)(concat(newSequence,Cons(head, Nil())))
+        case Nil() => newSequence
+      }
+      s match
+        case Nil() => Nil()
+        case Cons(head, tail) => _distinct(tail)(Cons(head,Nil()))
+
 
     /*
      * Group contiguous elements in the sequence
